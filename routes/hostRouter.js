@@ -8,10 +8,15 @@ res.sendFile(path.join(rootDir,'views','addhome.html'));
 
 })
 
+const registeredHomes=[];
+
 hostRouter.post("/host/add-home",(req,res,next)=>{
-
+console.log(req.body.houseName);
+registeredHomes.push({houseName: req.body.houseName});
 res.sendFile(path.join(rootDir,'views','homeadded.html'));
-
 })
 
-module.exports= hostRouter;
+exports.hostRouter= hostRouter;
+exports.registeredHomes=registeredHomes;
+
+
