@@ -10,9 +10,23 @@ res.sendFile(path.join(rootDir,'views','addhome.html'));
 
 const registeredHomes=[];
 
+const normalizePhotoUrl = (url = '') => {
+  const trimmed = String(url).trim();
+  if (!trimmed) return '';
+  if (/^https?:\/\//i.test(trimmed)) return trimmed;
+  return `https://${trimmed}`;
+};
+
+const normalizePrice = (price = '') => String(price).trim().replace(/^\$/, '');
+
 hostRouter.post("/host/add-home",(req,res,next)=>{
-console.log(req.body.houseName);
-registeredHomes.push({houseName: req.body.houseName});
+registeredHomes.push({
+  houseName: String(req.body.houseName || '').trim(),
+  price: normalizePrice(req.body.price),
+  location: String(req.body.location || '').trim(),
+  rating: String(req.body.rating || '').trim(),
+  photoUrl: normalizePhotoUrl(req.body.photoUrl),
+});
 res.sendFile(path.join(rootDir,'views','homeadded.html'));
 })
 
