@@ -1,36 +1,15 @@
-const path = require('path');
-const express = require('express');
-const hostRouter=express.Router();
-const rootDir=require("../utils/pathUtils")
+// External Module
+const express = require("express");
+const hostRouter = express.Router();
 
-hostRouter.get("/host/add-home",(req,res,next)=>{
-res.sendFile(path.join(rootDir,'views','addhome.html'));
+// Local Module
+const hostController = require("../controllers/hostController");
 
-})
+hostRouter.get("/add-home", hostController.getAddHome);
+hostRouter.post("/add-home", hostController.postAddHome);
+hostRouter.get("/host-home-list", hostController.getHostHomes);
+hostRouter.get("/edit-home/:homeId", hostController.getEditHome);
+hostRouter.post("/edit-home", hostController.postEditHome);
+hostRouter.post("/delete-home/:homeId", hostController.postDeleteHome);
 
-const registeredHomes=[];
-
-const normalizePhotoUrl = (url = '') => {
-  const trimmed = String(url).trim();
-  if (!trimmed) return '';
-  if (/^https?:\/\//i.test(trimmed)) return trimmed;
-  return `https://${trimmed}`;
-};
-
-const normalizePrice = (price = '') => String(price).trim().replace(/^\$/, '');
-
-hostRouter.post("/host/add-home",(req,res,next)=>{
-registeredHomes.push({
-  houseName: String(req.body.houseName || '').trim(),
-  price: normalizePrice(req.body.price),
-  location: String(req.body.location || '').trim(),
-  rating: String(req.body.rating || '').trim(),
-  photoUrl: normalizePhotoUrl(req.body.photoUrl),
-});
-res.sendFile(path.join(rootDir,'views','homeadded.html'));
-})
-
-exports.hostRouter= hostRouter;
-exports.registeredHomes=registeredHomes;
-
-
+module.exports = hostRouter;
